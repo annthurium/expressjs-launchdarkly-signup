@@ -13,19 +13,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 let context = {
   kind: "user",
   anonymous: true,
-  key: "anonymous-123",
+  key: "anonymous-82390850932485093284",
 };
 
 app.get("/", async (req, res) => {
   // Evaluate LaunchDarkly flag
   const showSeasonalStyling = await ldClient.variation(
-    "show-seasonal-styling",
+    "show-seasonal-css",
     context,
     false
   );
-
+  console.log("showSeasonalStyling", showSeasonalStyling);
   let url;
-  if (showSeasonalStyling === true) {
+  if (showSeasonalStyling === "Spooky CSS") {
     url = "signup-2.html";
   } else {
     url = "signup.html";
