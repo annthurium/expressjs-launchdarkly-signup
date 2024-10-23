@@ -32,22 +32,4 @@
       </form>
     </div>
   </div>
-  <script>
-    const ldclient = LDClient.initialize("client-side-id-123abc", {
-      anonymous: true,
-    });
-
-    ldclient.on("ready", function () {
-      const showSeasonalStyling = ldclient.variation(
-        "show-seasonal-css",
-        false
-      );
-      console.log("showSeasonalStyling:", showSeasonalStyling);
-
-      if (showSeasonalStyling === "Spooky CSS") {
-        document.body.classList.add("spooky-theme");
-        document.querySelector('link[rel="stylesheet"]').href = "./style-2.css";
-      }
-    });
-  </script>
 </body>
