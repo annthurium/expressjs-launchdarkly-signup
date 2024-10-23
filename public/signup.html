@@ -1,21 +1,53 @@
 <!DOCTYPE html>
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="./style.css">
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-        <div class="signup-container">
-            <h1>Pizza Rat's Costume Emporium</h1>
-            <h4>Sign up to get discounts and more</h4>
-            <div class="signup-form">
-                <form action="/login" method="post">
-                
-                <input class="form-input" type="email" name="email" required="true" placeholder="pepperoni@subway.party"/>
-                <input class="form-input" type="password" name="password" required="true" placeholder="Type your Password"/>
-                <input class="form-input" type="tel" name="phone" placeholder="(212) 123-4567"/>
-                <p class="login-redirect-text">Already have an account? <a href="#">Log in here.</a></p>
-                <p><button class="submit-button" type="submit" value="Submit"/>Submit</p>
-            </form>
-            </div>
-        </div>
-    </body>
+  <div class="signup-container">
+    <h1>Pizza Rat's Costume Emporium</h1>
+    <h4>Sign up to get discounts and more</h4>
+    <div class="signup-form">
+      <form action="/login" method="post">
+        <input
+          class="form-input"
+          type="email"
+          name="email"
+          required="true"
+          placeholder="pepperoni@subway.party"
+        />
+        <input
+          class="form-input"
+          type="password"
+          name="password"
+          required="true"
+          placeholder="Type your Password"
+        />
+        <p class="login-redirect-text">
+          Already have an account? <a href="#">Log in here.</a>
+        </p>
+        <p>
+          <button class="submit-button" type="submit" value="Submit" />Submit
+        </p>
+      </form>
+    </div>
+  </div>
+  <script>
+    const ldclient = LDClient.initialize("client-side-id-123abc", {
+      anonymous: true,
+    });
+
+    ldclient.on("ready", function () {
+      const showSeasonalStyling = ldclient.variation(
+        "show-seasonal-css",
+        false
+      );
+      console.log("showSeasonalStyling:", showSeasonalStyling);
+
+      if (showSeasonalStyling === "Spooky CSS") {
+        document.body.classList.add("spooky-theme");
+        document.querySelector('link[rel="stylesheet"]').href = "./style-2.css";
+      }
+    });
+  </script>
+</body>
