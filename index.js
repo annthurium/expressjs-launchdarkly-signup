@@ -3,6 +3,7 @@ const path = require("path");
 const serveStatic = require("serve-static");
 const bodyParser = require("body-parser");
 const LaunchDarkly = require("@launchdarkly/node-server-sdk");
+const session = require("express-session");
 require("dotenv").config();
 
 const app = express();
@@ -10,13 +11,22 @@ const app = express();
 app.use(serveStatic(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-let context = {
-  kind: "user",
-  anonymous: true,
-  key: "anonymous-82390850932485093284",
-};
+app.use(
+  session({
+    secret: "session",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
 
 app.get("/", async (req, res) => {
+  const context = {
+    kind: "user",
+    anonymous: true,
+    key: req.sessionID,
+  };
+
   // Evaluate LaunchDarkly flag
   const showSeasonalStyling = await ldClient.variation(
     "show-seasonal-css",
@@ -37,12 +47,16 @@ app.get("/", async (req, res) => {
 const ldClient = LaunchDarkly.init(process.env.LAUNCHDARKLY_SDK_KEY);
 
 app.post("/login", async (req, res) => {
+  const context = {
+    kind: "user",
+    anonymous: true,
+    key: req.sessionID,
+  };
   await ldClient.track("signup-conversion", context, 1);
 
   res.send(
     `Thanks for signing up! Look for the confirmation email in your inbox: ${req.body.email}`
   );
-  // insert your actual authentication logic here
 });
 
 // Add the waitForInitialization function to ensure the client is ready before starting the server
