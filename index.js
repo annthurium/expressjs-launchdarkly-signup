@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const serveStatic = require("serve-static");
-const bodyParser = require("body-parser");
+
 const LaunchDarkly = require("@launchdarkly/node-server-sdk");
 const session = require("express-session");
 require("dotenv").config();
@@ -9,7 +9,6 @@ require("dotenv").config();
 const app = express();
 
 app.use(serveStatic(path.join(__dirname, "public")));
-app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(
   session({
@@ -20,44 +19,8 @@ app.use(
   })
 );
 
-app.get("/", async (req, res) => {
-  const context = {
-    kind: "user",
-    anonymous: true,
-    key: req.sessionID,
-  };
-
-  // Evaluate LaunchDarkly flag
-  const showSeasonalStyling = await ldClient.variation(
-    "show-seasonal-css",
-    context,
-    false
-  );
-  console.log("showSeasonalStyling", showSeasonalStyling);
-  let url;
-  if (showSeasonalStyling === "Spooky CSS") {
-    url = "signup-2.html";
-  } else {
-    url = "signup.html";
-  }
-  res.redirect(url);
-});
-
 // Initialize the LaunchDarkly client
 const ldClient = LaunchDarkly.init(process.env.LAUNCHDARKLY_SDK_KEY);
-
-app.post("/login", async (req, res) => {
-  const context = {
-    kind: "user",
-    anonymous: true,
-    key: req.sessionID,
-  };
-  await ldClient.track("signup-conversion", context, 1);
-
-  res.send(
-    `Thanks for signing up! Look for the confirmation email in your inbox: ${req.body.email}`
-  );
-});
 
 // Add the waitForInitialization function to ensure the client is ready before starting the server
 const timeoutInSeconds = 5;
