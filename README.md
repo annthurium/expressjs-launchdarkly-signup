@@ -20,8 +20,6 @@ Run the server:
 
 `npm start`
 
-If you load http://127.0.0.1:3000/ in the browser, you should see a "hello world" page.
-
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
